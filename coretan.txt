@@ -1,0 +1,10 @@
+"scripts": {
+    "start": "node server.js",
+    "setup-project": "npm i && cd client && npm i",
+    "server": "nodemon server.js",
+    "watch": "node --watch server.js"
+  },
+
+Login:
+email: john@gmail.com
+pass: secret123
