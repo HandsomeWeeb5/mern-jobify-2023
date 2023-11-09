@@ -5,6 +5,7 @@ import { nanoid } from 'nanoid';
 import mongoose from 'mongoose';
 import cookieParser from "cookie-parser";
 import cloudinary from 'cloudinary';
+import cors from 'cors';
 // import { body, validationResult } from 'express-validator';
 import * as dotenv from 'dotenv';
 dotenv.config();
@@ -49,6 +50,9 @@ app.use(express.static(path.resolve(__dirname, './public')));
 
 // COOKIE PARSER
 app.use(cookieParser());
+
+// CORS
+app.use(cors());
 
 app.get('/', (req, res) => {
   res.send('Welcome My friend!');
