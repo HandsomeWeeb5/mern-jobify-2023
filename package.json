@@ -9,7 +9,7 @@
     "server": "nodemon server.js",
     "client": "cd client && npm run dev",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
-    "build-fe": "cd client && npm run build"
+    "build-fe": "cd client && npm run build && cd dist && mv about.txt apple-touch-icon.png favicon-16x16.png favicon-32x32.png favicon.ico index.html site.webmanifest ../public"
   },
   "keywords": [],
   "author": "Farhan",
