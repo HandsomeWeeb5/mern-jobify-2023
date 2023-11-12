@@ -1,10 +1,11 @@
-import { Outlet, redirect, useLoaderData, useNavigate } from 'react-router-dom'
+import { Outlet, redirect, useLoaderData, useNavigate, useNavigation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import styled from 'styled-components'
 import { 
   BigSidebar, 
   Navbar, 
-  SmallSidebar 
+  SmallSidebar,
+  Loading 
 } from '../../components'
 
 import { useState, createContext, useContext } from 'react'
@@ -33,7 +34,8 @@ const DashboardLayout = ({ isDarkThemeEnabled }) => {
   const { user } = useLoaderData();
   // console.log(user);
   const navigate = useNavigate();
-
+  const navigation = useNavigation();
+  const isPageLoading = navigation.state === 'loading';
   const [showSidebar, setShowSidebar] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(isDarkThemeEnabled);
 
@@ -71,7 +73,7 @@ const DashboardLayout = ({ isDarkThemeEnabled }) => {
           <div>
             <Navbar />
             <div className="dashboard-page">
-              <Outlet context={{ user }}/>
+              {isPageLoading ? <Loading /> : <Outlet context={{ user }}/>}
             </div>
           </div>
         </main>
