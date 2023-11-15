@@ -10,6 +10,7 @@ import {
 
 import { useState, createContext, useContext } from 'react'
 import customFetch from '../../utils/customFetch';
+import { useQuery } from '@tanstack/react-query'
 const DashboardContext = createContext();
 
 // const checkDefaultTheme = () => {
@@ -17,22 +18,40 @@ const DashboardContext = createContext();
 //   document.body.classList.toggle('dark-theme', isDarkTheme);
 //   return isDarkTheme;
 // }
-export const loader = async () => {
-  try {
+
+const userQuery = {
+  queryKey: ['user'],
+  queryFn: async () => {
     const { data } = await customFetch('/user/current-user');
     return data;
+  }
+};
+
+//* Without React Query
+// export const loader = async () => {
+//   try {
+//     const { data } = await customFetch('/user/current-user');
+//     return data;
+//   } catch (error) {
+//     return redirect('/');
+//   }
+// }
+
+export const loader = (queryClient) => async () => {
+  try {
+    return await queryClient.ensureQueryData(userQuery);
   } catch (error) {
     return redirect('/');
   }
-  // return "hello world";
-}
+};
 
-const DashboardLayout = ({ isDarkThemeEnabled }) => {
+const DashboardLayout = ({ isDarkThemeEnabled, queryClient }) => {
   // temp
   // const user = { name: 'john' };
 
-  const { user } = useLoaderData();
-  // console.log(user);
+  // const { user } = useLoaderData();//  <= without react query
+  const { user } = useQuery(userQuery).data; //* <= with react query
+
   const navigate = useNavigate();
   const navigation = useNavigation();
   const isPageLoading = navigation.state === 'loading';
@@ -54,6 +73,7 @@ const DashboardLayout = ({ isDarkThemeEnabled }) => {
     // console.log('logout user');
     navigate('/');
     await customFetch.get('/auth/logout');
+    queryClient.invalidateQueries();
     toast.success('Logging out...');
   };
 

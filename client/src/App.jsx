@@ -64,25 +64,41 @@ const router = createBrowserRouter([
         element: <Register />,
         action: registerAction
       },
+      // {
+      //   path: 'login',
+      //   element: <Login />,
+      //   action: loginAction
+      // },
       {
+        //* With react query
         path: 'login',
         element: <Login />,
-        action: loginAction
+        action: loginAction(queryClient)
       },
       {
+        // path: 'dashboard',
+        // loader: dashboardLoader,
+        // element: <DashboardLayout isDarkThemeEnabled={isDarkThemeEnabled} />,
+        //* With React query
         path: 'dashboard',
-        loader: dashboardLoader,
-        element: <DashboardLayout isDarkThemeEnabled={isDarkThemeEnabled}/>,
+        loader: dashboardLoader(queryClient),
+        element: <DashboardLayout isDarkThemeEnabled={isDarkThemeEnabled} queryClient={queryClient}/>,
         children: [
           {
             index: true,
             element: <AddJob />,
             action: addJobAction
           },
+          // {
+          //   path: 'stats',
+          //   element: <Stats />,
+          //   loader: statsLoader,
+          //   errorElement: <ErrorElement />
+          // },
           {
             path: 'stats',
             element: <Stats />,
-            loader: statsLoader,
+            loader: statsLoader(queryClient),
             errorElement: <ErrorElement />
           },
           {

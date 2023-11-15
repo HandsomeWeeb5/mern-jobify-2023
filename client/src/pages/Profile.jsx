@@ -5,17 +5,37 @@ import customFetch from "../utils/customFetch";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 
-export const action = async ({ request }) => {
+//* Without React Query
+// export const action = async ({ request }) => {
+//   const formData = await request.formData();
+//   const file = formData.get('avatar');
+//   console.log(file);
+//   if(file && file.size > 500000){
+//     toast.error('Image size too large');
+//     return null;
+//   }
+//   try {
+//     await customFetch.patch('/user/update-user', formData);
+//     toast.success('Profile updated successfully');
+//   } catch (error) {
+//     toast.error(error?.response?.data?.msg);
+//   }
+//   return null;
+// }
+
+export const action = (queryClient) => async ({ request }) => {
   const formData = await request.formData();
   const file = formData.get('avatar');
-  console.log(file);
+  // console.log(file);
   if(file && file.size > 500000){
     toast.error('Image size too large');
     return null;
   }
   try {
     await customFetch.patch('/user/update-user', formData);
+    queryClient.invalidateQueries(['user']);
     toast.success('Profile updated successfully');
+    return redirect('/dashboard');
   } catch (error) {
     toast.error(error?.response?.data?.msg);
   }

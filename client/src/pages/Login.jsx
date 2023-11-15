@@ -4,7 +4,29 @@ import { Logo, FormRow, SubmitBtn } from '../components'
 import { toast } from 'react-toastify'
 import customFetch from '../utils/customFetch'
 
-export const action = async ({ request }) => {
+// export const action = async ({ request }) => {
+//   const formData = await request.formData();
+//   const data = Object.fromEntries(formData);
+//   const errors = { msg: '' };
+//   if (data.password.length < 3) {
+//     errors.msg = 'password too short';
+//     return errors;
+//   }
+//   try {
+//     await customFetch.post('/auth/login', data);
+//     toast.success('Login successful');
+//     return redirect('/dashboard');
+//   } catch (error) {
+//     // toast.error(error?.response?.data?.msg);
+//     // return error;
+//     //* Use useActionData()
+//     errors.msg = error?.response?.data?.msg;
+//     return errors;
+//   }
+// }
+
+//* With React query
+export const action = (queryClient) => async ({ request }) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
   const errors = { msg: '' };
@@ -14,6 +36,7 @@ export const action = async ({ request }) => {
   }
   try {
     await customFetch.post('/auth/login', data);
+    queryClient.invalidateQueries();
     toast.success('Login successful');
     return redirect('/dashboard');
   } catch (error) {
