@@ -11,6 +11,7 @@ import {
 import { useState, createContext, useContext, useEffect } from 'react'
 import customFetch from '../../utils/customFetch';
 import { useQuery } from '@tanstack/react-query'
+import { checkDefaultTheme } from '../../App'
 const DashboardContext = createContext();
 
 // const checkDefaultTheme = () => {
@@ -45,7 +46,7 @@ export const loader = (queryClient) => async () => {
   }
 };
 
-const DashboardLayout = ({ isDarkThemeEnabled, queryClient }) => {
+const DashboardLayout = ({ queryClient }) => {
   // temp
   // const user = { name: 'john' };
 
@@ -56,7 +57,7 @@ const DashboardLayout = ({ isDarkThemeEnabled, queryClient }) => {
   const navigation = useNavigation();
   const isPageLoading = navigation.state === 'loading';
   const [showSidebar, setShowSidebar] = useState(false);
-  const [isDarkTheme, setIsDarkTheme] = useState(isDarkThemeEnabled);
+  const [isDarkTheme, setIsDarkTheme] = useState(checkDefaultTheme());
   const [isAuthError, setIsAuthError] = useState(false);
 
   const toggleDarkTheme = () => {
