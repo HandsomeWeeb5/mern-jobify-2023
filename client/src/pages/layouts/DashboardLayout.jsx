@@ -8,7 +8,7 @@ import {
   Loading 
 } from '../../components'
 
-import { useState, createContext, useContext } from 'react'
+import { useState, createContext, useContext, useEffect } from 'react'
 import customFetch from '../../utils/customFetch';
 import { useQuery } from '@tanstack/react-query'
 const DashboardContext = createContext();
@@ -57,6 +57,7 @@ const DashboardLayout = ({ isDarkThemeEnabled, queryClient }) => {
   const isPageLoading = navigation.state === 'loading';
   const [showSidebar, setShowSidebar] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(isDarkThemeEnabled);
+  const [isAuthError, setIsAuthError] = useState(false);
 
   const toggleDarkTheme = () => {
     const newDarkTheme = !isDarkTheme;
@@ -76,6 +77,22 @@ const DashboardLayout = ({ isDarkThemeEnabled, queryClient }) => {
     queryClient.invalidateQueries();
     toast.success('Logging out...');
   };
+
+  //* Axios Interceptor
+  customFetch.interceptors.response.use((response) => {
+    return response;
+  }, (error) => {
+    if (error?.response?.status === 401){
+      setIsAuthError(true)
+    }
+    return Promise.reject(error);
+  });
+
+  useEffect(() => {
+    if(!isAuthError) return;
+    logoutUser(); 
+  }, [isAuthError])
+  // there is no token, you are going to landing page
 
   return (
     <DashboardContext.Provider value={{

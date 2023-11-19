@@ -5,7 +5,8 @@ import { nanoid } from 'nanoid';
 import mongoose from 'mongoose';
 import cookieParser from "cookie-parser";
 import cloudinary from 'cloudinary';
-import cors from 'cors';
+import helmet from 'helmet';
+import mongoSanitize from 'express-mongo-sanitize';
 // import { body, validationResult } from 'express-validator';
 import * as dotenv from 'dotenv';
 dotenv.config();
@@ -52,8 +53,9 @@ app.use(express.static(path.resolve(__dirname, './client/dist')));
 // COOKIE PARSER
 app.use(cookieParser());
 
-// CORS
-app.use(cors());
+// SECURITY PACKAGES
+app.use(helmet());
+app.use(mongoSanitize());
 
 app.get('/', (req, res) => {
   res.send('Welcome My friend!');

@@ -6,19 +6,38 @@ import { Form, redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 import customFetch from "../utils/customFetch";
 
-export const action = async ({ request }) => {
-  const formData = await request.formData();
-  const data = Object.fromEntries(formData);
-  
-  try {
-    await customFetch.post('/jobs', data);
-    toast.success('New job created successfully!');
-    return redirect('all-jobs');
-  } catch (error) {
-    toast.error(error?.response?.data?.msg);
-    return error;
-  }
-}
+//* Without react query
+// export const action = async ({ request }) => {
+//   const formData = await request.formData();
+//   const data = Object.fromEntries(formData);
+
+//   try {
+//     await customFetch.post('/jobs', data);
+//     toast.success('New job created successfully!');
+//     return redirect('all-jobs');
+//   } catch (error) {
+//     toast.error(error?.response?.data?.msg);
+//     return error;
+//   }
+// }
+
+//* With react query
+export const action =
+  (queryClient) =>
+  async ({ request }) => {
+    const formData = await request.formData();
+    const data = Object.fromEntries(formData);
+
+    try {
+      await customFetch.post("/jobs", data);
+      queryClient.invalidateQueries(["jobs"]);
+      toast.success("New job created successfully!");
+      return redirect("all-jobs");
+    } catch (error) {
+      toast.error(error?.response?.data?.msg);
+      return error;
+    }
+  };
 
 const AddJob = () => {
   const { user } = useOutletContext();
@@ -85,14 +104,14 @@ const DashboardFormWrapper = styled.section`
     display: grid;
     place-items: center;
   }
-  @media (min-width: 992px){
+  @media (min-width: 992px) {
     .form-center {
       grid-template-columns: 1fr 1fr;
       align-items: center;
       column-gap: 1rem;
     }
   }
-  @media (min-width: 1120px){
+  @media (min-width: 1120px) {
     .form-center {
       grid-template-columns: 1fr 1fr 1fr;
     }

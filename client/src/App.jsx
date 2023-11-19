@@ -84,10 +84,16 @@ const router = createBrowserRouter([
         loader: dashboardLoader(queryClient),
         element: <DashboardLayout isDarkThemeEnabled={isDarkThemeEnabled} queryClient={queryClient}/>,
         children: [
+          // {
+          //   index: true,
+          //   element: <AddJob />,
+          //   action: addJobAction
+          // },
           {
             index: true,
             element: <AddJob />,
-            action: addJobAction
+            action: addJobAction(queryClient),
+            errorElement: <ErrorElement />
           },
           // {
           //   path: 'stats',
@@ -101,10 +107,16 @@ const router = createBrowserRouter([
             loader: statsLoader(queryClient),
             errorElement: <ErrorElement />
           },
+          // {
+          //   path: 'all-jobs',
+          //   element: <AllJobs />,
+          //   loader: allJobsLoader,
+          // },
           {
             path: 'all-jobs',
             element: <AllJobs />,
-            loader: allJobsLoader
+            loader: allJobsLoader(queryClient),
+            errorElement: <ErrorElement />
           },
           {
             path: 'profile',
@@ -119,12 +131,12 @@ const router = createBrowserRouter([
           {
             path: 'edit-job/:_id',
             element: <EditJob />,
-            loader: editJobLoader,
-            action: editJobAction
+            loader: editJobLoader(queryClient),
+            action: editJobAction(queryClient)
           },
           { 
             path: 'delete-job/:_id',
-            action: deleteJobAction 
+            action: deleteJobAction(queryClient) 
           }
         ]
       }
